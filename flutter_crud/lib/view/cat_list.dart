@@ -1,63 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud/model/cats.dart';
+import 'package:flutter_crud/model/db_helper.dart';
 import 'package:flutter_crud/view/cat_detail.dart';
-import 'package:flutter_crud/model/cat_repository.dart';
 
-class CatList extends StatelessWidget {
-  final _initCats = Cats(
-      id: 0,
-      name: '',
-      birthday: '',
-      gender: '',
-      memo: '',
-      createdAt: DateTime.now());
+final _initCats = Cats(
+    id: 0,
+    name: '',
+    birthday: '',
+    gender: '',
+    memo: '',
+    createdAt: DateTime.now());
 
-  @override
-  Widget build(BuildContext context) {
-    //final vm = CatListViewModel(CatRepository(DbHelper()));
-    final page = _CatListPage();
-    return Scaffold(
-      appBar: AppBar(title: Text('猫一覧')),
-      body: page,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => page.goToCatDetailScreen(context, _initCats),
-      ),
-    );
-  }
+Future<List<Cats>> getCatsList() async {
+  var dbhelper = DbHelper();
+  Future<List<Cats>> catList = dbhelper.selectAllCats();
+  return catList;
 }
 
-class _CatListPage extends StatelessWidget {
-  late final CatRepository _repository;
-  List<Cats> _catList = [];
-
-  Future<void> initCatsList() async {
-    _catList = await _repository.catSelectAll();
-  }
+class CatList extends StatefulWidget {
+  const CatList({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: _catList.length,
-      itemBuilder: (BuildContext context, int index) {
-        var cat = _catList[index];
-        return _buildCatListTile(context, cat);
-      },
-    );
-  }
+  CatListPageState createState() => CatListPageState();
+}
 
-  Widget _buildCatListTile(BuildContext context, Cats cat) {
-    return Card(
-      child: ListTile(
-        title: Text(cat.name),
-        onTap: () => goToCatDetailScreen(context, cat),
+class CatListPageState extends State<CatList> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('猫一覧')),
+      body: FutureBuilder<List<Cats>>(
+        future: getCatsList(),
+        builder:(context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget> [
+                    Text(snapshot.data![index].name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,fontSize: 18.0)
+                      )
+                    ]
+                  );
+                }
+              );
+          }
+          return Container(
+            alignment: AlignmentDirectional.center,
+            child: const CircularProgressIndicator(),
+            );
+        }
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () => goToCatDetailScreen(context, _initCats),
       ),
     );
   }
 
   void goToCatDetailScreen(BuildContext context, Cats cat) {
     var route = MaterialPageRoute(
-      settings: RouteSettings(name: '/view.cat_detail'),
+      settings: const RouteSettings(name: '/view.cat_detail'),
       builder: (BuildContext context) => CatDetail(cat),
     );
     Navigator.push(context, route);

@@ -6,7 +6,7 @@ class DbHelper {
   late Database _database;
 
   Future<Database> get database async {
-    if (_database != null) return _database;
+    //if (_database != null) return _database;
     _database = await _initDB();
     return _database;
   }
@@ -74,7 +74,7 @@ class DbHelper {
       'gender': cats.gender,
       'birthday': cats.birthday,
       'memo': cats.memo,
-      'createdAt': cats.createdAt,
+      'createdAt': cats.createdAt.toUtc().toIso8601String(),
     };
   }
 
