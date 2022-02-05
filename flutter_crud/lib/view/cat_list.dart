@@ -11,49 +11,69 @@ final _initCats = Cats(
     memo: '',
     createdAt: DateTime.now());
 
-Future<List<Cats>> getCatsList() async {
-  var dbhelper = DbHelper();
-  Future<List<Cats>> catList = dbhelper.selectAllCats();
-  return catList;
-}
-
 class CatList extends StatefulWidget {
   const CatList({Key? key}) : super(key: key);
 
   @override
-  CatListPageState createState() => CatListPageState();
+  _CatListPageState createState() => _CatListPageState();
 }
 
-class CatListPageState extends State<CatList> {
+class _CatListPageState extends State<CatList> {
+  List<Cats> catList = [];
+  bool isLoading = false;
+
+// Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
+// ここでは、初期処理としてCatsの全データを取得する。
+  @override
+  void initState() {
+    super.initState();
+    getCatsList();
+  }
+
+  Future getCatsList() async {
+    setState(() => isLoading = true);
+    catList = await DbHelper.instance.selectAllCats();
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('猫一覧')),
-      body: FutureBuilder<List<Cats>>(
-        future: getCatsList(),
-        builder:(context, snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data?.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget> [
-                    Text(snapshot.data![index].name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,fontSize: 18.0)
-                      )
-                    ]
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SizedBox(
+              child: ListView.builder(
+                itemCount: catList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final cat = catList[index];
+                  return Card(
+                    child: InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(cat.name),
+                                  Row(
+                                    children: [
+                                      const Text('性別:'),
+                                      Text(cat.gender),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ]),
+                      ),
+                    ),
                   );
-                }
-              );
-          }
-          return Container(
-            alignment: AlignmentDirectional.center,
-            child: const CircularProgressIndicator(),
-            );
-        }
-      ),
+                },
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () => goToCatDetailScreen(context, _initCats),
@@ -64,8 +84,9 @@ class CatListPageState extends State<CatList> {
   void goToCatDetailScreen(BuildContext context, Cats cat) {
     var route = MaterialPageRoute(
       settings: const RouteSettings(name: '/view.cat_detail'),
-      builder: (BuildContext context) => CatDetail(cat),
+      builder: (BuildContext context) => CatDetail(id: cat.id),
     );
     Navigator.push(context, route);
+    getCatsList();
   }
 }

@@ -2,50 +2,90 @@ import 'package:flutter_crud/model/cats.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+const List<String> cats = [
+  'id',
+  'name',
+  'gender',
+  'birthday',
+  'memo',
+  'createdAt',
+];
+
 class DbHelper {
-  late Database _database;
+  // DbHelperをinstance化する
+  static final DbHelper instance = DbHelper._createInstance();
+  static Database? _database;
+
+  DbHelper._createInstance();
 
   Future<Database> get database async {
-    //if (_database != null) return _database;
-    _database = await _initDB();
-    return _database;
+    return _database ??= await _initDB();
   }
 
   Future<Database> _initDB() async {
     String path = join(await getDatabasesPath(), 'cats.db');
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createTable,
-    );
-  }
-
-  Future<void> _createTable(Database db, int version) async {
-    String sql = '''
-      CREATE TABLE cats(
-        id int PRIMARY KEY,
-        name TEXT,
-        gender TEXT,
-        birthday TEXT,
-        memo TEXT,
-        createdAt TEXT
-      )
-    ''';
-    return await db.execute(sql);
+    return await openDatabase(path, version: 1, onCreate: (db, version) {
+      '''
+          CREATE TABLE cats(
+            id int PRIMARY KEY,
+            name TEXT,
+            gender TEXT,
+            birthday TEXT,
+            memo TEXT,
+            createdAt TEXT
+          )
+        ''';
+    });
   }
 
   Future<List<Cats>> selectAllCats() async {
     final db = await database;
-    var catsData = await db.query('cats');
+    final List<Map<String, dynamic>> catsData = await db.query('cats');
     if (catsData.isEmpty) return [];
 
-    return catsData.map((map) => fromMap(map)).toList();
+    return List.generate(catsData.length, (index) {
+      return Cats(
+        id: catsData[index]["id"],
+        name: catsData[index]["name"],
+        gender: catsData[index]["gender"],
+        birthday: catsData[index]["birthday"],
+        memo: catsData[index]["memo"],
+        createdAt: catsData[index]["createdAt"],
+      );
+    });
+  }
+
+  Future<Cats> catData(int id) async {
+    final db = await instance.database;
+    var cat = [];
+    cat = await db.query(
+      'cats',
+      columns: cats,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (cat.isNotEmpty) {
+      return Cats.fromJson(cat.first);
+    } else {
+      return Cats(
+        id: 0,
+        name: '',
+        birthday: '',
+        gender: '',
+        memo: '',
+        createdAt: DateTime.now());
+    }
   }
 
   Future insert(Cats cats) async {
     final db = await database;
-    return await db.insert('cats', toMap(cats));
+    return await db.insert(
+      'cats',
+      toMap(cats),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 
   Future update(Cats cats) async {
@@ -58,12 +98,12 @@ class DbHelper {
     );
   }
 
-  Future delete(Cats cats) async {
+  Future delete(int id) async {
     final db = await database;
     return await db.delete(
       'cats',
       where: 'id = ?',
-      whereArgs: [cats.id],
+      whereArgs: [id],
     );
   }
 

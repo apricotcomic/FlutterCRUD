@@ -12,5 +12,5 @@ class CatRepository {
 
   Future update(Cats cats) => _dbHelper.update(cats);
 
-  Future delete(Cats cats) => _dbHelper.delete(cats);
+  Future delete(Cats cats) => _dbHelper.delete(cats.id);
 }
