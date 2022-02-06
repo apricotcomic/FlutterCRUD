@@ -24,6 +24,7 @@ class _CatDetailEditState extends State<CatDetailEdit> {
   @override
   void initState() {
     super.initState();
+    id = widget.cats?.id ?? 0;
     name = widget.cats?.name ?? '';
     birthday = widget.cats?.birthday ?? '';
     gender = widget.cats?.gender ?? '';
@@ -104,7 +105,6 @@ class _CatDetailEditState extends State<CatDetailEdit> {
 
   Future createCat() async {
     final cat = Cats(
-      id: id,
       name: name,
       birthday: birthday,
       gender: gender,

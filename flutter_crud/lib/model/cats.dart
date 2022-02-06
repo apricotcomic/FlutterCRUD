@@ -1,5 +1,8 @@
+import 'package:flutter_crud/model/db_helper.dart';
+import 'package:intl/intl.dart';
+
 class Cats {
-  int id;
+  int? id;
   String name;
   String gender;
   String birthday;
@@ -7,7 +10,7 @@ class Cats {
   DateTime createdAt;
 
   Cats({
-    required this.id,
+    this.id,
     required this.name,
     required this.gender,
     required this.birthday,
@@ -33,20 +36,19 @@ class Cats {
       );
 
   static Cats fromJson(Map<String, Object?> json) => Cats(
-        id: json['id'] as int,
-        name: json['name'] as String,
-        gender: json['gender'] as String,
-        birthday: json['birthday'] as String,
-        memo: json['memo'] as String,
-        createdAt: DateTime.parse(json['createAt'] as String),
+        id: json[columnId] as int,
+        name: json[columnName] as String,
+        gender: json[columnGender] as String,
+        birthday: json[columnBirthday] as String,
+        memo: json[columnMemo] as String,
+        createdAt: DateTime.parse(json[columnCreatedAt] as String),
       );
 
   Map<String, Object> toJson() => {
-        'id': id,
-        'name': name,
-        'gender': gender,
-        'birthday': birthday,
-        'memo': memo,
-        'createdAt': createdAt,
+        columnName: name,
+        columnGender: gender,
+        columnBirthday: birthday,
+        columnMemo: memo,
+        columnCreatedAt: DateFormat('yyyy-MM-dd HH:mm:ss').format(createdAt),
       };
 }

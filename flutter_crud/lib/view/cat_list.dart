@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_crud/model/cats.dart';
 import 'package:flutter_crud/model/db_helper.dart';
 import 'package:flutter_crud/view/cat_detail.dart';
+import 'package:flutter_crud/view/cat_detail_edit.dart';
 
 final _initCats = Cats(
     id: 0,
@@ -69,6 +70,14 @@ class _CatListPageState extends State<CatList> {
                               ),
                             ]),
                       ),
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CatDetail(id: cat.id!),
+                          ),
+                        );
+                        getCatsList();
+                      },
                     ),
                   );
                 },
@@ -76,17 +85,13 @@ class _CatListPageState extends State<CatList> {
             ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () => goToCatDetailScreen(context, _initCats),
+        onPressed: () async {
+          await Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => const CatDetailEdit()),
+          );
+          getCatsList();
+        },
       ),
     );
-  }
-
-  void goToCatDetailScreen(BuildContext context, Cats cat) {
-    var route = MaterialPageRoute(
-      settings: const RouteSettings(name: '/view.cat_detail'),
-      builder: (BuildContext context) => CatDetail(id: cat.id),
-    );
-    Navigator.push(context, route);
-    getCatsList();
   }
 }
