@@ -21,6 +21,8 @@ class _CatDetailEditState extends State<CatDetailEdit> {
   late String memo;
   late DateTime createdAt;
 
+// Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
+// ここでは、各項目の初期値を設定する
   @override
   void initState() {
     super.initState();
@@ -32,24 +34,25 @@ class _CatDetailEditState extends State<CatDetailEdit> {
     createdAt = widget.cats?.createdAt ?? DateTime.now();
   }
 
+// 詳細編集画面を表示する
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('猫編集'),
         actions: [
-          buildSaveButton(),
+          buildSaveButton(),                      // 保存ボタンを表示する
         ],
       ),
       body: SingleChildScrollView(
         child: Form(
           key: _formkey,
-          child: CatDetailForm(
-            name: name,
+          child: CatDetailForm(                   // cat_detail_form.dartに定義した項目を表示
+            name: name,                           // 各項目の初期値を渡す
             birthday: birthday,
             gender: gender,
             memo: memo,
-            onChangedName: (name) => setState(() => this.name = name),
+            onChangedName: (name) => setState(() => this.name = name),    // 変更があったとき項目セットする
             onChangedBirthday: (birthday) =>
                 setState(() => this.birthday = birthday),
             onChangedGender: (gender) => setState(() => this.gender = gender),
@@ -60,6 +63,7 @@ class _CatDetailEditState extends State<CatDetailEdit> {
     );
   }
 
+// 保存ボタンの設定
   Widget buildSaveButton() {
     final isFormValid = name.isNotEmpty;
 
@@ -71,11 +75,12 @@ class _CatDetailEditState extends State<CatDetailEdit> {
           onPrimary: Colors.white,
           primary: isFormValid ? Colors.redAccent : Colors.grey.shade700,
         ),
-        onPressed: createOrUpdateCat,
+        onPressed: createOrUpdateCat,                 // 保存ボタンを押したら実行する処理を指定する
       ),
     );
   }
 
+// 保存ボタンを押したとき実行する処理
   void createOrUpdateCat() async {
     final isValid = _formkey.currentState!.validate();
 

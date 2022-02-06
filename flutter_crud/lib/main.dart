@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: <String, WidgetBuilder>{
-        '/': (_) => const CatList(),
+        '/': (_) => const CatList(),    //cat_list.dartを呼び出し
       },
     );
   }

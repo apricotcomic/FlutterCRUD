@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+// 編集画面の入力項目を定義するクラス
 class CatDetailForm extends StatelessWidget {
   final String? name;
   final String? birthday;
@@ -26,21 +25,23 @@ class CatDetailForm extends StatelessWidget {
     required this.onChangedMemo,
   }) : super(key: key);
 
+// 更新画面の設定
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          changeName(),
-          changeBirthday(),
-          changeGender(),
-          changeMemo(),
+          changeName(),                   // 名前の更新フィールド設定
+          changeBirthday(),               // 誕生日の更新フィールド設定
+          changeGender(),                 // 性別の更新フィールド設定
+          changeMemo(),                   // メモの更新フィールド設定
         ],
       ),
     );
   }
 
+// 名前の入力フィールドを定義
   Widget changeName() {
     return TextFormField(
           maxLines: 1,
@@ -49,7 +50,7 @@ class CatDetailForm extends StatelessWidget {
             hintText: '名前を入力してください',
           ),
           validator: (name) =>
-              name != null && name.isEmpty ? '名前は必ず入れてね' : null,
+              name != null && name.isEmpty ? '名前は必ず入れてね' : null,   // validateを設定
           onChanged: onChangedName,
     );
   }
