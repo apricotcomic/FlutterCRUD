@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud/model/cats.dart';
 import 'package:flutter_crud/model/db_helper.dart';
-import 'package:flutter_crud/view/cat_detail_form.dart';
 
 class CatDetailEdit extends StatefulWidget {
   final Cats? cats;
@@ -13,13 +12,15 @@ class CatDetailEdit extends StatefulWidget {
 }
 
 class _CatDetailEditState extends State<CatDetailEdit> {
-  final _formkey = GlobalKey<FormState>();
   late int id;
   late String name;
   late String birthday;
   late String gender;
   late String memo;
   late DateTime createdAt;
+  final List<String> _list = <String>['男の子', '女の子', '不明'];
+  String _selected = '不明';
+  String value = '不明';
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
@@ -30,8 +31,16 @@ class _CatDetailEditState extends State<CatDetailEdit> {
     name = widget.cats?.name ?? '';
     birthday = widget.cats?.birthday ?? '';
     gender = widget.cats?.gender ?? '';
+    _selected  = widget.cats?.gender ?? '';
     memo = widget.cats?.memo ?? '';
     createdAt = widget.cats?.createdAt ?? DateTime.now();
+  }
+
+  void _onChanged(String? value) {
+    setState(() {
+      _selected = value!;
+      gender = _selected;
+    });
   }
 
 // 詳細編集画面を表示する
@@ -41,24 +50,49 @@ class _CatDetailEditState extends State<CatDetailEdit> {
       appBar: AppBar(
         title: const Text('猫編集'),
         actions: [
-          buildSaveButton(),                      // 保存ボタンを表示する
+          buildSaveButton(), // 保存ボタンを表示する
         ],
       ),
       body: SingleChildScrollView(
-        child: Form(
-          key: _formkey,
-          child: CatDetailForm(                   // cat_detail_form.dartに定義した項目を表示
-            name: name,                           // 各項目の初期値を渡す
-            birthday: birthday,
-            gender: gender,
-            memo: memo,
-            onChangedName: (name) => setState(() => this.name = name),    // 変更があったとき項目セットする
-            onChangedBirthday: (birthday) =>
-                setState(() => this.birthday = birthday),
-            onChangedGender: (gender) => setState(() => this.gender = gender),
-            onChangedMemo: (memo) => setState(() => this.memo = memo),
+        child: Column(children: [
+          TextFormField(
+            maxLines: 1,
+            initialValue: name,
+            decoration: const InputDecoration(
+              hintText: '名前を入力してください',
+            ),
+            validator: (name) => name != null && name.isEmpty
+                ? '名前は必ず入れてね'
+                : null, // validateを設定
+            onChanged: (name) => setState(() => this.name = name),
           ),
-        ),
+          TextFormField(
+            maxLines: 1,
+            initialValue: birthday,
+            decoration: const InputDecoration(
+              hintText: '誕生日を入力してください',
+            ),
+            onChanged: (birthday) => setState(() => this.birthday = birthday),
+          ),
+          DropdownButton(
+            items: _list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            value: _selected,
+            onChanged: _onChanged,
+          ),
+          TextFormField(
+            maxLines: 1,
+            initialValue: memo,
+            decoration: const InputDecoration(
+              hintText: 'メモを入力してください',
+            ),
+            onChanged: (memo) => setState(() => this.memo = memo),
+          ),
+        ]),
       ),
     );
   }
@@ -75,26 +109,22 @@ class _CatDetailEditState extends State<CatDetailEdit> {
           onPrimary: Colors.white,
           primary: isFormValid ? Colors.redAccent : Colors.grey.shade700,
         ),
-        onPressed: createOrUpdateCat,                 // 保存ボタンを押したら実行する処理を指定する
+        onPressed: createOrUpdateCat, // 保存ボタンを押したら実行する処理を指定する
       ),
     );
   }
 
 // 保存ボタンを押したとき実行する処理
   void createOrUpdateCat() async {
-    final isValid = _formkey.currentState!.validate();
+    final isUpdate = (widget.cats != null);
 
-    if (isValid) {
-      final isUpdate = (widget.cats != null);
-
-      if (isUpdate) {
-        await updateCat();
-      } else {
-        await createCat();
-      }
-
-      Navigator.of(context).pop();
+    if (isUpdate) {
+      await updateCat();
+    } else {
+      await createCat();
     }
+
+    Navigator.of(context).pop();
   }
 
   Future updateCat() async {

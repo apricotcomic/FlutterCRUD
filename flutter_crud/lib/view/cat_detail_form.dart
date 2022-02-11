@@ -32,10 +32,10 @@ class CatDetailForm extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          changeName(),                   // 名前の更新フィールド設定
-          changeBirthday(),               // 誕生日の更新フィールド設定
-          changeGender(),                 // 性別の更新フィールド設定
-          changeMemo(),                   // メモの更新フィールド設定
+          changeName(), // 名前の更新フィールド設定
+          changeBirthday(), // 誕生日の更新フィールド設定
+          changeGender(), // 性別の更新フィールド設定
+          changeMemo(), // メモの更新フィールド設定
         ],
       ),
     );
@@ -44,25 +44,25 @@ class CatDetailForm extends StatelessWidget {
 // 名前の入力フィールドを定義
   Widget changeName() {
     return TextFormField(
-          maxLines: 1,
-          initialValue: name,
-          decoration: const InputDecoration(
-            hintText: '名前を入力してください',
-          ),
-          validator: (name) =>
-              name != null && name.isEmpty ? '名前は必ず入れてね' : null,   // validateを設定
-          onChanged: onChangedName,
+      maxLines: 1,
+      initialValue: name,
+      decoration: const InputDecoration(
+        hintText: '名前を入力してください',
+      ),
+      validator: (name) =>
+          name != null && name.isEmpty ? '名前は必ず入れてね' : null, // validateを設定
+      onChanged: onChangedName,
     );
   }
 
   Widget changeBirthday() {
     return TextFormField(
-          maxLines: 1,
-          initialValue: birthday,
-          decoration: const InputDecoration(
-            hintText: '誕生日を入力してください',
-          ),
-          onChanged: onChangedBirthday,
+      maxLines: 1,
+      initialValue: birthday,
+      decoration: const InputDecoration(
+        hintText: '誕生日を入力してください',
+      ),
+      onChanged: onChangedBirthday,
     );
   }
 
@@ -79,12 +79,14 @@ class CatDetailForm extends StatelessWidget {
 
   Widget changeMemo() {
     return TextFormField(
-        maxLines: 1,
-        initialValue: memo,
-        decoration: const InputDecoration(
-          hintText: 'メモを入力してください',
-        ),
-        onChanged: onChangedMemo,
-      );
+      maxLines: 1,
+      initialValue: memo,
+      decoration: const InputDecoration(
+        hintText: 'メモを入力してください',
+      ),
+      onChanged: onChangedMemo,
+    );
   }
 }
+
+
