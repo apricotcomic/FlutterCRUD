@@ -18,9 +18,9 @@ class _CatDetailEditState extends State<CatDetailEdit> {
   late String gender;
   late String memo;
   late DateTime createdAt;
-  final List<String> _list = <String>['男の子', '女の子', '不明'];
-  String _selected = '不明';
-  String value = '不明';
+  final List<String> _list = <String>['男の子', '女の子', '不明'];     // 性別のDropdownの項目を設定
+  late String _selected;                                              // Dropdownの初期値
+  String value = '不明';                                              // Dropdownの初期値
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
@@ -31,11 +31,12 @@ class _CatDetailEditState extends State<CatDetailEdit> {
     name = widget.cats?.name ?? '';
     birthday = widget.cats?.birthday ?? '';
     gender = widget.cats?.gender ?? '';
-    _selected  = widget.cats?.gender ?? '';
+    _selected  = widget.cats?.gender ?? '不明';
     memo = widget.cats?.memo ?? '';
     createdAt = widget.cats?.createdAt ?? DateTime.now();
   }
 
+// Dropdownの値の変更を行う
   void _onChanged(String? value) {
     setState(() {
       _selected = value!;
@@ -54,44 +55,72 @@ class _CatDetailEditState extends State<CatDetailEdit> {
         ],
       ),
       body: SingleChildScrollView(
-        child: Column(children: [
-          TextFormField(
-            maxLines: 1,
-            initialValue: name,
-            decoration: const InputDecoration(
-              hintText: '名前を入力してください',
+        child: Column(children: <Widget>[
+          Row(children: [                                             // 名前の行の設定
+            const Expanded(child:
+              Text('名前'),                                           // 見出し
             ),
-            validator: (name) => name != null && name.isEmpty
-                ? '名前は必ず入れてね'
-                : null, // validateを設定
-            onChanged: (name) => setState(() => this.name = name),
-          ),
-          TextFormField(
-            maxLines: 1,
-            initialValue: birthday,
-            decoration: const InputDecoration(
-              hintText: '誕生日を入力してください',
+            Expanded(child: 
+              TextFormField(
+                maxLines: 1,
+                initialValue: name,
+                decoration: const InputDecoration(
+                  hintText: '名前を入力してください',
+                ),
+                validator: (name) => name != null && name.isEmpty
+                    ? '名前は必ず入れてね'
+                    : null, // validateを設定
+                onChanged: (name) => setState(() => this.name = name),
+              ),
             ),
-            onChanged: (birthday) => setState(() => this.birthday = birthday),
-          ),
-          DropdownButton(
-            items: _list.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            value: _selected,
-            onChanged: _onChanged,
-          ),
-          TextFormField(
-            maxLines: 1,
-            initialValue: memo,
-            decoration: const InputDecoration(
-              hintText: 'メモを入力してください',
+          ]),
+          Row(children: [
+            const Expanded(child:
+              Text('誕生日'),
             ),
-            onChanged: (memo) => setState(() => this.memo = memo),
-          ),
+            Expanded(child: 
+              TextFormField(
+                maxLines: 1,
+                initialValue: birthday,
+                decoration: const InputDecoration(
+                  hintText: '誕生日を入力してください',
+                ),
+                onChanged: (birthday) => setState(() => this.birthday = birthday),
+              ),
+            ),
+          ]),
+          Row(children:[
+            const Expanded(child: 
+              Text('性別'),
+            ),
+            Expanded(child:
+              DropdownButton(
+                items: _list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                value: _selected,
+                onChanged: _onChanged,
+              ),
+            ),
+          ]),
+          Row(children:[
+            const Expanded(child: 
+              Text('メモ')
+            ),
+            Expanded(child: 
+              TextFormField(
+                maxLines: 1,
+                initialValue: memo,
+                decoration: const InputDecoration(
+                  hintText: 'メモを入力してください',
+                ),
+                onChanged: (memo) => setState(() => this.memo = memo),
+              ),
+            ),
+          ]),
         ]),
       ),
     );
