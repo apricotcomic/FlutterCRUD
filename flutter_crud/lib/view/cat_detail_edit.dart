@@ -18,9 +18,11 @@ class _CatDetailEditState extends State<CatDetailEdit> {
   late String gender;
   late String memo;
   late DateTime createdAt;
-  final List<String> _list = <String>['男の子', '女の子', '不明'];     // 性別のDropdownの項目を設定
-  late String _selected;                                              // Dropdownの初期値
-  String value = '不明';                                              // Dropdownの初期値
+  final List<String> _list = <String>['男の子', '女の子', '不明']; // 性別のDropdownの項目を設定
+  late String _selected; // Dropdownの選択値を格納するエリア
+  String value = '不明'; // Dropdownの初期値
+  static const int textExpandedFlex = 1; // 見出しのexpaded flexの比率
+  static const int dataExpandedFlex = 4; // 項目のexpanede flexの比率
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
@@ -31,7 +33,7 @@ class _CatDetailEditState extends State<CatDetailEdit> {
     name = widget.cats?.name ?? '';
     birthday = widget.cats?.birthday ?? '';
     gender = widget.cats?.gender ?? '';
-    _selected  = widget.cats?.gender ?? '不明';
+    _selected = widget.cats?.gender ?? '不明';
     memo = widget.cats?.memo ?? '';
     createdAt = widget.cats?.createdAt ?? DateTime.now();
   }
@@ -56,12 +58,16 @@ class _CatDetailEditState extends State<CatDetailEdit> {
       ),
       body: SingleChildScrollView(
         child: Column(children: <Widget>[
-          Row(children: [                                             // 名前の行の設定
-            const Expanded(child:
-              Text('名前'),                                           // 見出し
+          Row(children: [
+            // 名前の行の設定
+            const Expanded(
+              flex: textExpandedFlex,
+              child: Text('名前',
+                textAlign: TextAlign.center,), // 見出し
             ),
-            Expanded(child: 
-              TextFormField(
+            Expanded(
+              flex: dataExpandedFlex,
+              child: TextFormField(
                 maxLines: 1,
                 initialValue: name,
                 decoration: const InputDecoration(
@@ -75,26 +81,35 @@ class _CatDetailEditState extends State<CatDetailEdit> {
             ),
           ]),
           Row(children: [
-            const Expanded(child:
-              Text('誕生日'),
+            const Expanded(
+              flex: textExpandedFlex,
+              child: Text('誕生日',
+                textAlign: TextAlign.center,
+              ),
             ),
-            Expanded(child: 
-              TextFormField(
+            Expanded(
+              flex: dataExpandedFlex,
+              child: TextFormField(
                 maxLines: 1,
                 initialValue: birthday,
                 decoration: const InputDecoration(
                   hintText: '誕生日を入力してください',
                 ),
-                onChanged: (birthday) => setState(() => this.birthday = birthday),
+                onChanged: (birthday) =>
+                    setState(() => this.birthday = birthday),
               ),
             ),
           ]),
-          Row(children:[
-            const Expanded(child: 
-              Text('性別'),
+          Row(children: [
+            const Expanded(
+              flex: textExpandedFlex,
+              child: Text('性別',
+                textAlign: TextAlign.center,
+              ),
             ),
-            Expanded(child:
-              DropdownButton(
+            Expanded(
+              flex: dataExpandedFlex,
+              child: DropdownButton(
                 items: _list.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem(
                     value: value,
@@ -106,12 +121,16 @@ class _CatDetailEditState extends State<CatDetailEdit> {
               ),
             ),
           ]),
-          Row(children:[
-            const Expanded(child: 
-              Text('メモ')
+          Row(children: [
+            const Expanded(
+              flex: textExpandedFlex,
+              child: Text('メモ',
+                textAlign: TextAlign.center,
+                )
             ),
-            Expanded(child: 
-              TextFormField(
+            Expanded(
+              flex: dataExpandedFlex,
+              child: TextFormField(
                 maxLines: 1,
                 initialValue: memo,
                 decoration: const InputDecoration(

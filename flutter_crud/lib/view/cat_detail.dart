@@ -16,6 +16,9 @@ class CatDetail extends StatefulWidget {
 class _CatDetailState extends State<CatDetail> {
   late Cats cats;
   bool isLoading = false;
+  static const int textExpandedFlex = 1; // 見出しのexpaded flexの比率
+  static const int dataExpandedFlex = 4; // 項目のexpanede flexの比率
+
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、渡されたidをキーとしてcatsテーブルからデータを取得する
@@ -77,61 +80,74 @@ class _CatDetailState extends State<CatDetail> {
                     )
                   )
                 ),
-                SizedBox(
-                  child: Column(                                      // 縦並びで項目を表示
+                //SizedBox(
+                //  child: Column(    
+                  Column(                                    // 縦並びで項目を表示
                     crossAxisAlignment: CrossAxisAlignment.stretch,   // 子要素の高さを合わせる
                     children: [
-                      Container(                                      // 「名前」の見出し行の設定
-                        child: const Text('名前'),
-                        color: Colors.grey[300],
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
+                      Row(children: [
+                        const Expanded(
+                          flex: textExpandedFlex,
+                          child: Text('名前',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Container(                                      // catsテーブルのnameの表示を設定
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(cats.name),
-                      ),
-                      Container(                                      // 「性別」の見出し行の設定
-                        child: const Text('性別'),
-                        color: Colors.grey[300],
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
+                        Expanded(
+                          flex: dataExpandedFlex,
+                          child: Container(                           // catsテーブルのnameの表示を設定
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(cats.name),
+                          ),
                         ),
-                      ),
-                      Container(                                      // catsテーブルのgenderの表示を設定
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(cats.gender),
-                      ),
-                      Container(                                      // 「誕生日」の見出し行の設定
-                        child: const Text('誕生日'),
-                        color: Colors.grey[300],
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
+                      ],),
+                      Row(children: [
+                        const Expanded(
+                          flex: textExpandedFlex,
+                          child: Text('性別',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Container(                                      // catsテーブルのbirthdayの表示を設定
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(cats.birthday),
-                      ),
-                      Container(                                      // 「メモ」の見出し行の設定
-                        child: const Text('メモ'),
-                        color: Colors.grey[300],
-                        height: 20,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 5,
+                        Expanded(
+                          flex: dataExpandedFlex,
+                          child: Container(                          // catsテーブルのgenderの表示を設定
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(cats.gender),
+                          ),
                         ),
-                      ),
-                      Container(                                      // catsテーブルのmemoの表示を設定
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(cats.memo),
-                      ),
+                      ],),
+                      Row(children: [
+                        const Expanded(           // 「誕生日」の見出し行の設定
+                          flex: textExpandedFlex,
+                          child: Text('誕生日',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Expanded(
+                          flex: dataExpandedFlex,
+                          child: Container(                                      // catsテーブルのbirthdayの表示を設定
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(cats.birthday),
+                          ),
+                        )
+                      ],),
+                      Row(children: [
+                        const Expanded(     // 「メモ」の見出し行の設定
+                          flex: textExpandedFlex,
+                          child: Text('メモ',
+                            textAlign: TextAlign.center,
+                          )
+                        ),
+                        Expanded(
+                          flex: dataExpandedFlex,
+                          child: Container(                                      // catsテーブルのmemoの表示を設定
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(cats.memo),
+                          ),
+                        ),
+                      ],),
                     ],
                   ),
-                ),
+              //  ),
               ],
           )
     
