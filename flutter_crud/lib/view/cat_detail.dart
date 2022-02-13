@@ -80,13 +80,11 @@ class _CatDetailState extends State<CatDetail> {
                     )
                   )
                 ),
-                //SizedBox(
-                //  child: Column(    
-                  Column(                                    // 縦並びで項目を表示
+                  Column(                                             // 縦並びで項目を表示
                     crossAxisAlignment: CrossAxisAlignment.stretch,   // 子要素の高さを合わせる
                     children: [
                       Row(children: [
-                        const Expanded(
+                        const Expanded(                               // 見出しの設定
                           flex: textExpandedFlex,
                           child: Text('名前',
                             textAlign: TextAlign.center,
@@ -101,7 +99,7 @@ class _CatDetailState extends State<CatDetail> {
                         ),
                       ],),
                       Row(children: [
-                        const Expanded(
+                        const Expanded(                              // 見出しの設定（性別)
                           flex: textExpandedFlex,
                           child: Text('性別',
                             textAlign: TextAlign.center,

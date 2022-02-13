@@ -60,17 +60,19 @@ class _CatDetailEditState extends State<CatDetailEdit> {
         child: Column(children: <Widget>[
           Row(children: [
             // 名前の行の設定
-            const Expanded(
+            const Expanded(                   // 見出し（名前）
               flex: textExpandedFlex,
               child: Text('名前',
-                textAlign: TextAlign.center,), // 見出し
+                textAlign: TextAlign.center,
+              ), 
             ),
-            Expanded(
+            Expanded(                         // 名前入力エリアの設定
               flex: dataExpandedFlex,
               child: TextFormField(
                 maxLines: 1,
                 initialValue: name,
                 decoration: const InputDecoration(
+                  //labelText: '名前',
                   hintText: '名前を入力してください',
                 ),
                 validator: (name) => name != null && name.isEmpty
@@ -80,14 +82,37 @@ class _CatDetailEditState extends State<CatDetailEdit> {
               ),
             ),
           ]),
+          // 性別の行の設定
           Row(children: [
-            const Expanded(
+            const Expanded(                     // 見出し（性別）
+              flex: textExpandedFlex,
+              child: Text('性別',
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(                           // 性別をドロップダウンで設定
+              flex: dataExpandedFlex,
+              child: DropdownButton(
+                key: const ValueKey('gender'),
+                items: _list.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                value: _selected,
+                onChanged: _onChanged,
+              ),
+            ),
+          ]),
+          Row(children: [
+            const Expanded(                 // 見出し（誕生日）
               flex: textExpandedFlex,
               child: Text('誕生日',
                 textAlign: TextAlign.center,
               ),
             ),
-            Expanded(
+            Expanded(                     // 誕生日入力エリアの設定
               flex: dataExpandedFlex,
               child: TextFormField(
                 maxLines: 1,
@@ -101,34 +126,13 @@ class _CatDetailEditState extends State<CatDetailEdit> {
             ),
           ]),
           Row(children: [
-            const Expanded(
-              flex: textExpandedFlex,
-              child: Text('性別',
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              flex: dataExpandedFlex,
-              child: DropdownButton(
-                items: _list.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                value: _selected,
-                onChanged: _onChanged,
-              ),
-            ),
-          ]),
-          Row(children: [
-            const Expanded(
+            const Expanded(                     // 見出し（メモ）
               flex: textExpandedFlex,
               child: Text('メモ',
                 textAlign: TextAlign.center,
                 )
             ),
-            Expanded(
+            Expanded(                           // メモ入力エリアの設定
               flex: dataExpandedFlex,
               child: TextFormField(
                 maxLines: 1,
@@ -164,36 +168,38 @@ class _CatDetailEditState extends State<CatDetailEdit> {
 
 // 保存ボタンを押したとき実行する処理
   void createOrUpdateCat() async {
-    final isUpdate = (widget.cats != null);
+    final isUpdate = (widget.cats != null);     // 画面が空でなかったら
 
     if (isUpdate) {
-      await updateCat();
+      await updateCat();                        // updateの処理
     } else {
-      await createCat();
+      await createCat();                        // insertの処理
     }
 
-    Navigator.of(context).pop();
+    Navigator.of(context).pop();                // 前の画面に戻る
   }
 
+  // 更新処理の呼び出し
   Future updateCat() async {
-    final cat = widget.cats!.copy(
+    final cat = widget.cats!.copy(              // 画面の内容をcatにセット
       name: name,
       birthday: birthday,
       gender: gender,
       memo: memo,
     );
 
-    await DbHelper.instance.update(cat);
+    await DbHelper.instance.update(cat);        // catの内容で更新する
   }
 
+  // 追加処理の呼び出し
   Future createCat() async {
-    final cat = Cats(
+    final cat = Cats(                           // 入力された内容をcatにセット
       name: name,
       birthday: birthday,
       gender: gender,
       memo: memo,
       createdAt: createdAt,
     );
-    await DbHelper.instance.insert(cat);
+    await DbHelper.instance.insert(cat);        // catの内容で追加する
   }
 }
