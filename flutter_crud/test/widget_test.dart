@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_crud/view/cat_detail.dart';
-import 'package:flutter_crud/view/cat_detail_edit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_crud/main.dart';
@@ -24,24 +22,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextFormField).at(1), '2001/7/1');
     await tester.enterText(find.byType(TextFormField).at(2), 'どらのメモ');
-    // 更新ボタンをタップ
+    // 保存ボタンをタップ
     await tester.tap(find.text('保存'));
     await tester.pumpAndSettle();
-    expect(find.text('どら'), findsOneWidget);
-    expect(find.text('2001/7/1'), findsOneWidget);
-    expect(find.text('どらのメモ'), findsOneWidget);
+    
+    // 一覧画面に戻る
+    expect(find.text('猫一覧'), findsOneWidget);
   });
-
-  //testWidgets('猫詳細テスト', (WidgetTester tester) async {
-  //  await tester.pumpWidget(const MaterialApp(
-  //      home: CatDetail(
-  //    id: 0,
-  //  )));
-  //  expect(find.text('猫詳細'), findsOneWidget);
-  //});
-
-  //testWidgets('猫編集テスト', (WidgetTester tester) async {
-  //  await tester.pumpWidget(const MaterialApp(home: CatDetailEdit()));
-  //  expect(find.text('猫編集'), findsOneWidget);
-  //});
 }
