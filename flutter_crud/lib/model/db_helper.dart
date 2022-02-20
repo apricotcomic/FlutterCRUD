@@ -3,7 +3,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 // catsテーブルのカラム名を設定
-const String columnId = '_id';
+const String columnId = 'id';
 const String columnName = 'name';
 const String columnGender = 'gender';
 const String columnBirthday = 'birthday';
@@ -49,7 +49,7 @@ class DbHelper {
     //catsテーブルをcreateする
     await database.execute('''
       CREATE TABLE cats(
-        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT,
         gender TEXT,
         birthday TEXT,
@@ -74,7 +74,7 @@ class DbHelper {
     cat = await db.query(
       'cats',
       columns: columns,
-      where: '_id = ?',                     // 渡されたidをキーにしてcatsテーブルを読み込む
+      where: 'id = ?',                     // 渡されたidをキーにしてcatsテーブルを読み込む
       whereArgs: [id],
     );
       return Cats.fromJson(cat.first);      // 1件だけなので.toListは不要
@@ -95,7 +95,7 @@ class DbHelper {
     return await db.update(
       'cats',
       cats.toJson(),
-      where: '_id = ?',                   // idで指定されたデータを更新する
+      where: 'id = ?',                   // idで指定されたデータを更新する
       whereArgs: [cats.id],
     );
   }
@@ -105,7 +105,7 @@ class DbHelper {
     final db = await instance.database;
     return await db.delete(
       'cats',
-      where: '_id = ?',                   // idで指定されたデータを削除する
+      where: 'id = ?',                   // idで指定されたデータを削除する
       whereArgs: [id],
     );
   }

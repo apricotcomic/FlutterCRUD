@@ -11,6 +11,7 @@ void main() {
 
   test('catテーブルinsert', () async {
     when(dbhelper.insert(Cats(
+            id: 1,
             name: 'どら',
             gender: '女の子',
             birthday: '2001/5/1',
@@ -19,6 +20,7 @@ void main() {
         .thenAnswer((_) async => 'cat');
     expect(
         await dbhelper.insert(Cats(
+            id: 1,
             name: 'どら',
             gender: '女の子',
             birthday: '2001/5/1',
