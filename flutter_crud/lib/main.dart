@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud/view/cat_list.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final catListNotifierProvider = ChangeNotifierProvider((_) {
+  [];
+});
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp()
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

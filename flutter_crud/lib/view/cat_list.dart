@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_crud/model/cats.dart';
-import 'package:flutter_crud/model/db_helper.dart';
 import 'package:flutter_crud/view/cat_detail.dart';
 import 'package:flutter_crud/view/cat_detail_edit.dart';
+import 'package:flutter_crud/view/cat_list_notifier.dart';
+import 'package:flutter_crud/view/cat_list_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // catテーブルの内容全件を一覧表示するクラス
-class CatList extends StatefulWidget {
+class CatList extends ConsumerStatefulWidget {
   const CatList({Key? key}) : super(key: key);
 
   @override
   _CatListPageState createState() => _CatListPageState();
 }
 
-class _CatListPageState extends State<CatList> {
+class _CatListPageState extends ConsumerState<CatList> {
+  List<CatListState> catListState = [];
   List<Cats> catList = [];  //catsテーブルの全件を保有する
   bool isLoading = false;   //テーブル読み込み中の状態を保有する
 
@@ -21,14 +24,15 @@ class _CatListPageState extends State<CatList> {
   @override
   void initState() {
     super.initState();
-    getCatsList();
+    ref.read(catListProvider.notifier);
   }
 
 // initStateで動かす処理。
 // catsテーブルに登録されている全データを取ってくる
   Future getCatsList() async {
     setState(() => isLoading = true);                   //テーブル読み込み前に「読み込み中」の状態にする
-    catList = await DbHelper.instance.selectAllCats();  //catsテーブルを全件読み込む
+    catListState = ref.watch(catListProvider);  //catsテーブルを全件読み込む
+    catList = catListState.cast();
     setState(() => isLoading = false);                  //「読み込み済」の状態にする
   }
 
